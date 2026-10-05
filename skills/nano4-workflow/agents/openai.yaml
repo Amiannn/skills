@@ -1,0 +1,4 @@
+interface:
+  display_name: "Nano4 Workflow"
+  short_description: "Push login, Slurm jobs, deployment, and results"
+  default_prompt: "Use $nano4-workflow to inspect my Nano4 project and carry out the requested login, job, or deployment task."

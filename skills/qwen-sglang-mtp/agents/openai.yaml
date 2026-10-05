@@ -1,0 +1,4 @@
+interface:
+  display_name: "Qwen SGLang MTP"
+  short_description: "Native MTP setup, diagnostics, and rollout benchmarks"
+  default_prompt: "Use $qwen-sglang-mtp to inspect my Qwen/SGLang stack and configure or audit speculative decoding for the requested workload."
