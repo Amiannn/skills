@@ -1,4 +1,4 @@
-# Nano4 + Qwen MTP skills for Codex
+# Nano4 + Qwen MTP skills for Codex and Claude Code
 
 兩個可分享的操作 skill，不包含帳號憑證、模型權重或訓練程式。
 
@@ -15,22 +15,50 @@ git clone https://github.com/Amiannn/skills.git
 cd skills
 ```
 
-確認內容後執行（解壓 ZIP 後也可使用同一指令）：
+確認內容後依使用的工具安裝（解壓 ZIP 後也可使用同一指令）。
+
+### Codex
 
 ```bash
 bash install.sh
 ```
 
-需要 Bash 及 Python 3。預設安裝到 `~/.agents/skills`，不需 sudo、不會連線
-Nano4、不會提交 GPU 作業、不會安裝模型套件。若同名 skill 已存在會停止，
-不覆寫既有內容。可以指定其他支援的 discovery 目錄：
+預設安裝到 `~/.agents/skills`，也可明確指定 `--target codex`。
+若 Codex 未顯示新 skill，重新開啟 Codex。
+安裝位置與探索行為參考 [OpenAI Docs](https://learn.chatgpt.com/docs/build-skills)。
+
+### Claude Code
+
+```bash
+bash install.sh --target claude
+```
+
+安裝到 `~/.claude/skills`，適用本機 Claude Code 的各個專案。
+如只想安裝到某個專案：
+
+```bash
+bash install.sh --target claude /path/to/project/.claude/skills
+```
+
+在該專案重新開啟 Claude Code，輸入 `/` 尋找 `nano4-workflow` 與
+`qwen-sglang-mtp`。Claude Code 支援共用的 `SKILL.md` 格式與相對路徑的
+參考文件，因此兩個客戶端使用同一份操作指引，不另維護容易分歧的副本。
+Claude 安裝時省略僅供 Codex UI 使用的 `agents/openai.yaml`。
+格式、安裝位置與呼叫方式參考 [Claude Code 官方文件](https://code.claude.com/docs/en/skills)。
+
+這裡的 Claude 版本指 **Claude Code 本機終端**，不是把套件上傳到
+claude.ai 聊天介面。執行 Nano4 工作仍需要終端工具、SSH 與網路存取權限；
+本套件不會繞過 Claude Code 的工具權限或替你開啟自動核准。
+
+### 安裝安全與相依套件
+
+需要 Bash 及 Python 3。不需 sudo、不會連線 Nano4、不會提交 GPU 作業、
+不會安裝模型套件。若同名 skill 已存在會停止，不覆寫既有內容。
+原本的自訂安裝目錄語法仍可使用（預設為 Codex）：
 
 ```bash
 bash install.sh /path/to/skills
 ```
-
-若 Codex 未顯示新 skill，重新開啟 Codex。
-安裝位置與探索行為參考 [OpenAI Docs](https://learn.chatgpt.com/docs/build-skills)。
 
 ## 使用
 
@@ -41,6 +69,16 @@ bash install.sh /path/to/skills
 用 $nano4-workflow 幫我檢查這個專案，準備一個單卡 smoke test，先不要提交。
 用 $qwen-sglang-mtp 檢查我的 Qwen 與 SGLang 版本，規劃 MTP4 測試。
 ```
+
+在 Claude Code 中輸入（每次一行）：
+
+```text
+/nano4-workflow 幫我登入 Nano4，用 Push 讓我在手機核准。
+/nano4-workflow 幫我檢查這個專案，準備一個單卡 smoke test，先不要提交。
+/qwen-sglang-mtp 檢查我的 Qwen 與 SGLang 版本，規劃 MTP4 測試。
+```
+
+也可以用自然語言描述需求，由 Claude Code 判斷是否載入 skill。
 
 伙伴需要自行提供自己的 Nano4 使用者名稱、授權的計費 account、實驗專案
 與資料位置。帳號與 account 名稱不是密碼，但不要直接沿用別人的計費設定。
@@ -76,7 +114,17 @@ python3 skills/qwen-sglang-mtp/scripts/summarize_run.py /path/to/downloaded/run
 ## GitHub 分享
 
 Repository：<https://github.com/Amiannn/skills>。
-伙伴取得 repo 後執行上面的 `bash install.sh` 即可；ZIP 也使用相同方式。
+伙伴取得 repo 後依客戶端執行 `bash install.sh` 或
+`bash install.sh --target claude`；ZIP 也使用相同方式。
 這是公開分享版本，不包含原作者帳號、計費專案、憑證與工作站絕對路徑。
 
 目前沒有替作者選擇開源 license；要公開發布為開源專案前，請由作者確認。
+
+## 安裝測試
+
+```bash
+python3 -m unittest discover -s tests -v
+```
+
+測試使用暫存 HOME，檢查兩種安裝目錄、共用內容與防覆寫行為，不會登入
+Nano4 或呼叫模型。這不代表已在 Claude Code 中實測遠端登入或 GPU 任務。
